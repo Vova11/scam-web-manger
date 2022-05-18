@@ -3,7 +3,7 @@ const router = new express.Router()
 const User = require('../models/user')
 const auth = require('../middleware/auth')
 
-router.get('/', (req, res) => {
+router.get('/api/v1', (req, res) => {
   res.status(200).send('Scam web manager app!')
 })
 
