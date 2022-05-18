@@ -25,6 +25,7 @@ router.get('/users', auth, async (req,res) => {
     res.send(users)
   } catch (error) {
     res.status(500).send()
+    console.log('Test');
   }
 })
 
