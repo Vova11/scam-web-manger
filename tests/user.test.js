@@ -1,6 +1,6 @@
 const request = require('supertest')
-const app = require('../src/app')
-const User = require('../src/models/user')
+const app = require('../api/app')
+const User = require('../api/models/user')
 const { userOneId, userOne, setUpDatabase} = require('./fixtures/db')
 
 jest.setTimeout(90000);

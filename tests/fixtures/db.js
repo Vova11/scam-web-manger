@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken')
-const User = require('../../src/models/user')
-const Website = require('../../src/models/website')
+const User = require('../../api/models/user')
+const Website = require('../../api/models/website')
 
 const userOneId = new mongoose.Types.ObjectId()
 const userTwoId = new mongoose.Types.ObjectId()

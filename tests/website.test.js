@@ -1,7 +1,7 @@
 const request = require('supertest')
-const app = require('../src/app')
-const Website = require('../src/models/website')
-const User = require('../src/models/user')
+const app = require('../api/app')
+const Website = require('../api/models/website')
+const User = require('../api/models/user')
 const { 
   userOneId, 
   userOne, 
@@ -12,7 +12,7 @@ const {
   websiteThree, 
   setUpDatabase
 } = require('./fixtures/db')
-const fixUrl = require('../src/middleware/fixUrl')
+const fixUrl = require('../api/middleware/fixUrl')
 const { send } = require('express/lib/response')
 
 jest.setTimeout(90000);
