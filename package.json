@@ -7,8 +7,8 @@
     "node": "16.x"
   },
   "scripts": {
-    "start": "node api/index.js",
-    "dev": "env-cmd -f ./config/dev.env nodemon api/index.js",
+    "start": "node src/index.js",
+    "dev": "env-cmd -f ./config/dev.env nodemon src/index.js",
     "test": "env-cmd -f ./config/test.env jest --watchAll --runInBand"
   },
   "jest": {
