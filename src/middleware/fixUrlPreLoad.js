@@ -23,6 +23,7 @@ function removeHttp(url) {
 }
 
 const fixUrl = (e) => {
+  console.log(extractHostname(e))
   return removeHttp(extractHostname(e))
 }
 

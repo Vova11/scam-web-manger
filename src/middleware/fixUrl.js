@@ -27,8 +27,4 @@ const fixUrl = (req, res,next) => {
   next()
 }
 
-// const fixUrl = (e) => {
-//   return removeHttp(extractHostname(e))
-// }
-
 module.exports = fixUrl;
