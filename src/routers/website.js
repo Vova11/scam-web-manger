@@ -2,22 +2,38 @@ const express = require('express')
 const router = new express.Router()
 const Website = require('../models/website')
 const auth = require('../middleware/auth')
+const cache = require('../middleware/cache')
 const User = require('../models/user')
 const fixUrl = require('../middleware/fixUrl')
 const { db } = require('../models/website')
+const {client} = require('../../utils/redis')
+const { Promise } = require('mongoose')
 
-router.post('/websites', [fixUrl, auth], async (req, res) => {
+// const Redis = require('redis')
+// const redisClient = Redis.createClient()
+
+DEFAULT_EXPIRATION = 604799
+
+
+router.post('/websites', [auth, fixUrl], async (req, res) => {
   const website = new Website({
     ...req.body,
     owner: req.user._id
   })
+  const check = await client.exists(`data_${req.body.title}`);
+  if (check == 1) {
+    return res.status(400).send({msg: "Scam page is already saved in Redis"})
+  }
+  
   try {
-    await website.save()  
+    await website.save()
+    await client.setEx(`data_${req.body.title.toLowerCase()}`, DEFAULT_EXPIRATION, JSON.stringify({website}))
     res.status(201).send(website)
   } catch (error) {
     res.status(400).send(error)  
   }
 })
+
 
 // GET websites?active=true
 // GET websites?limit=10&skip=0
@@ -55,28 +71,19 @@ router.get('/websites', auth, async (req, res) => {
 })
 
 
-router.get('/scams', async (req, res) => {
-  let {limit, skip } = req.query
-  if (!limit) {
-    limit = 10
-  }
-  if (!skip) {
-    skip = 1
-  }
-  let prevPage = 1
-  if (skip > 1 ) {
-    prevPage = skip -1
-  } 
-
+router.get('/scams', cache, async (req, res) => {
+  
   try {
-    const scams = await Website.find({}).sort('createdAt').limit(limit).skip(skip)
-    let total =  await Website.countDocuments({})
-    console.log(total);
+    const scams = await Website.find().sort('createdAt');
+    // SET TO REDIS
+    const redisValues = JSON.stringify({
+      data: scams
+    });
+    client.setEx('data', DEFAULT_EXPIRATION, redisValues, function(err, reply) {
+        console.log(reply);
+    })
+
     res.send({
-      limit,
-      current_page: skip,
-      prevPage,
-      lastPage: Math.ceil(total / limit),
       data: scams
     })
   } catch (error) {
@@ -84,19 +91,66 @@ router.get('/scams', async (req, res) => {
   }
 })
 
-router.get('/search', async (req, res) => {
+
+// router.get('/scams', cache, async (req, res) => {
+//   let {limit, skip } = req.query
+//   if (!limit) {
+//     limit = 10
+//   }
+//   if (!skip) {
+//     skip = 1
+//   }
+//   let prevPage = 1
+//   if (skip > 1 ) {
+//     prevPage = skip -1
+//   } 
+
+//   try {
+//     const scams = await Website.find().sort('createdAt').limit(limit).skip(skip);
+//     let total =  await Website.countDocuments({})
+//     // SET TO REDIS
+//     const redisValues = JSON.stringify({
+//       data: scams
+//     });
+//     client.setEx('data', DEFAULT_EXPIRATION, redisValues, function(err, reply) {
+//         console.log(reply);
+//     })
+
+//     res.send({
+//       limit,
+//       current_page: skip,
+//       prevPage,
+//       lastPage: Math.ceil(total / limit),
+//       data: scams
+//     })
+//   } catch (error) {
+//     res.status(500).send()
+//   }
+// })
+
+
+router.get("/search", async (req, res) => {
   const title = req.query.title
-  console.log(title);
   try {
+    // Get from cache using the "Key"
+    const getRes = await client.get(`data_${title}`);
+    
+    const check = await client.exists(`data_${title}`); // check if token exists in cache already
+    if (check == 1) console.error("Scam page is saved in Redis");
+    if (getRes)
+      return res.json({ success: true, data: JSON.parse(getRes) });
+    // On cache-miss => query database
     const website = await Website.find({title})
     if (!website) {
       return res.status(404).send()
     }
-    res.status(200).send(website)
+    // Set cache
+    await client.setEx(`data_${title}`, DEFAULT_EXPIRATION, JSON.stringify({website}))
+    return res.status(200).json({success: true, data: website});
   } catch (error) {
     res.status(500).send()
   }
-})
+});
 
 
 router.get('/websites/:id', auth, async (req,res) => {
@@ -113,23 +167,35 @@ router.get('/websites/:id', auth, async (req,res) => {
 })
 
 router.patch('/websites/:id', auth, async (req,res) => {
+  
   const updates = Object.keys(req.body)
   const allowedUpdates = ['title', 'description','link']
   const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
   if (!isValidOperation) {
     return res.status(400).send({error})
   }
+  
   try {
     const website = await Website.findOne({_id: req.params.id, owner: req.user._id})
-    
+    console.log(website.title);
+    const data = await client.get(`data_${website.title}`)
+    if (data ) {
+      console.log('found and deleting');
+      await client.del(`data_${website.title}`)
+    }
+
+    await client.setEx(`data_${req.body.title.toLowerCase()}`, DEFAULT_EXPIRATION, JSON.stringify({website}))
+
     if (!website) {
       return res.status(404).send()  
     }
     updates.forEach((update) => {
       website[update] = req.body[update]
     })
+
     await website.save()
     res.send(website)
+    
   } catch (error) {
     res.status(400).send(error)
   }
@@ -148,3 +214,5 @@ router.delete('/websites/:id', auth, async (req,res) => {
 })
 
 module.exports = router
+
+

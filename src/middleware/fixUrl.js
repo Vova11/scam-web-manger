@@ -23,7 +23,7 @@ function removeHttp(url) {
 }
 
 const fixUrl = (req, res,next) => {
-  req.body.title = removeHttp(extractHostname(req.body.title))
+  removeHttp(extractHostname(req.body.title))
   next()
 }
 

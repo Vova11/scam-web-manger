@@ -5,8 +5,8 @@ const websiteSchema = new mongoose.Schema({
     type: String,
     trim: true,
     lowercase: true,
+    unique: true,
     required: true,
-    index: true
   },
   description: {
     type: String,

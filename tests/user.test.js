@@ -7,7 +7,6 @@ jest.setTimeout(90000);
 
 beforeEach(setUpDatabase);
 
-
 test('Load root page', async () => {
   await request(app).get('/').expect(200)
 })
