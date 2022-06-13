@@ -3,14 +3,9 @@ const router = new express.Router()
 const Website = require('../models/website')
 const auth = require('../middleware/auth')
 const cache = require('../middleware/cache')
-const User = require('../models/user')
 const fixUrl = require('../middleware/fixUrl')
-const { db } = require('../models/website')
 const {client} = require('../../utils/redis')
-const { Promise } = require('mongoose')
 
-// const Redis = require('redis')
-// const redisClient = Redis.createClient()
 
 DEFAULT_EXPIRATION = 604799
 
