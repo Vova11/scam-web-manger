@@ -1,10 +1,12 @@
 #!/bin/bash
-#Stopping existing node server
+#Stopping existing nodsse server
 DIR="/home/ec2-user/scam-web-manger"
 if [ -d "$DIR" ]; then
   echo "${DIR} exists"
-  cp -v /home/ec2-user/app.env /home/ec2-user/scam-web-manger/src/
 else
   echo "Creating ${DIR} directory"
   mkdir ${DIR}
 fi
+
+echo "Copy file"
+cp -v /home/ec2-user/app.env /home/ec2-user/scam-web-manger/src/
