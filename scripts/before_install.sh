@@ -9,4 +9,4 @@ else
 fi
 
 echo "Copy filerr"
-sudo cp -v /home/ec2-user/app.env /home/ec2-user/scam-web-manger/src/
+sudo mv -v /home/ec2-user/app.env /home/ec2-user/scam-web-manger/src/
