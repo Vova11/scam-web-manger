@@ -5,6 +5,7 @@ echo "run npm install ..."
 npm install
 echo "Starting application"
 sudo systemctl start nginx
+cp /home/ec2-user/app.env /home/ec2-user/scam-web-manger/src/
 sudo systemctl start expressapp.service
 
 
