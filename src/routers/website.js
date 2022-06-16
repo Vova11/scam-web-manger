@@ -29,7 +29,7 @@ router.post('/websites', [auth, fixUrl], async (req, res) => {
   }
 })
 
-// GET websites?active=true
+// GET wesbsites?active=true
 // GET websites?limit=10&skip=0
 // GET websites?sortBy=createdAt_asc or GET websites?sortBy=createdAt:dsc
 //{{url}}/websites?created_at:asc
