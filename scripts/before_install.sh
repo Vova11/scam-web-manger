@@ -8,5 +8,5 @@ else
   mkdir ${DIR}
 fi
 
-echo "Copy file"
+echo "Copy filer"
 cp -v /home/ec2-user/app.env /home/ec2-user/scam-web-manger/src/
