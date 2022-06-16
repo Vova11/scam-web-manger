@@ -7,7 +7,7 @@ const fixUrl = require('../middleware/fixUrl')
 const {client} = require('../../utils/redis')
 
 
-DEFAULT_EXPIRATION = 604799
+DEFAULT_EXPIRATION = 604800
 
 
 router.post('/websites', [auth, fixUrl], async (req, res) => {
@@ -28,7 +28,6 @@ router.post('/websites', [auth, fixUrl], async (req, res) => {
     res.status(400).send(error)  
   }
 })
-
 
 // GET websites?active=true
 // GET websites?limit=10&skip=0
@@ -162,7 +161,6 @@ router.get('/websites/:id', auth, async (req,res) => {
 })
 
 router.patch('/websites/:id', auth, async (req,res) => {
-  // comment
   const updates = Object.keys(req.body)
   const allowedUpdates = ['title', 'description','link']
   const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
