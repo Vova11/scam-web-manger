@@ -4,7 +4,7 @@ const User = require('../models/user')
 const auth = require('../middleware/auth')
 
 router.get('/', (req, res) => {
-  res.status(200).send('Scam web manager app by Vlado!')
+  res.status(200).send('Hello scam manager!')
 })
 
 router.post('/users', async (req, res) => {
