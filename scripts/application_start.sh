@@ -17,5 +17,3 @@ echo "Copy env"
 cp /home/ec2-user/app.env /home/ec2-user/scam-web-manger/src/
 sudo systemctl start nginx
 sudo systemctl start expressapp.service
-
-

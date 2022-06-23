@@ -33,6 +33,18 @@ const websiteSchema = new mongoose.Schema({
   toJSON: {virtuals: true}
 })
 
+websiteSchema.methods.toJSON = function() {
+  const website = this 
+  const websiteObject = website.toObject()
+  delete websiteObject.id
+  delete websiteObject.active
+  delete websiteObject.owner
+  delete websiteObject.createdAt
+  delete websiteObject.updatedAt
+  delete websiteObject.__v
+  return websiteObject
+}
+
 const Website = mongoose.model('Website', websiteSchema)
 
 module.exports = Website

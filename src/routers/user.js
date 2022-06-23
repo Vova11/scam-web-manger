@@ -4,7 +4,7 @@ const User = require('../models/user')
 const auth = require('../middleware/auth')
 
 router.get('/', (req, res) => {
-  res.status(200).send('Hello from CodeDeploy!')
+  res.status(200).send('v1')
 })
 
 router.post('/users', async (req, res) => {
