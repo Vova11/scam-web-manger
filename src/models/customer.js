@@ -7,7 +7,7 @@ const customerSchema = new mongoose.Schema({
     trim: true,
     lowercase: true,
   },
-  customer_id: {
+  chrome_id: {
     type: Number,
   }, 
   

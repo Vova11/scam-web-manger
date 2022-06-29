@@ -6,8 +6,12 @@ const websiteSchema = new mongoose.Schema({
     type: String,
     trim: true,
     lowercase: true,
-    unique: true,
     required: true,
+  },
+  fullTitle: {
+    type: String,
+    trim: true,
+    lowercase: true,
   },
   description: {
     type: String,
