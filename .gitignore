@@ -104,6 +104,7 @@ dist
 .tern-port
 
 DummyData.js
+RemoveFromDb.js
 ScamArray.txt
 config
 Readme.txt

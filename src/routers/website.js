@@ -65,10 +65,10 @@ router.get('/websites', auth, async (req, res) => {
 })
 
 
-router.get('/scams', cache, async (req, res) => {
+router.get('/scams', async (req, res) => {
   
   try {
-    const scams = await Website.find().sort('createdAt');
+    const scams = await Website.find().sort({createdAt:  -1});
     // SET TO REDIS
     const redisValues = JSON.stringify({
       data: scams
